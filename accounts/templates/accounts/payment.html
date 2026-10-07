@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ plan.name }} Subscription</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>{{ plan.name }}</h1>
+
+    <p>{{ plan.description }}</p>
+
+    <h2>
+        {{ plan.currency }} {{ plan.price }}
+    </h2>
+
+    <p>
+        Billing: {{ plan.billing_interval }}
+    </p>
+
+    <label for="access-token">
+        JWT Access Token
+    </label>
+
+    <input
+        type="password"
+        id="access-token"
+        placeholder="Paste your access token"
+    >
+
+    <button id="pay-button">
+        Pay {{ plan.currency }} {{ plan.price }}
+    </button>
+
+    <div id="message"></div>
+
+</div>
+
+<script>
+    const planId = "{{ plan.id }}";
+    const payButton = document.getElementById("pay-button");
+    const message = document.getElementById("message");
+
+    payButton.addEventListener("click", async function () {
+
+        const accessToken =
+            document.getElementById("access-token").value.trim();
+
+        if (!accessToken) {
+            message.textContent =
+                "Please enter your JWT access token.";
+
+            return;
+        }
+
+        payButton.disabled = true;
+        message.textContent =
+            "Creating Razorpay order...";
+
+        try {
+
+            const orderResponse = await fetch(
+                "/api/payments/razorpay/create-order/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + accessToken
+                    },
+
+                    body: JSON.stringify({
+                        plan_id: planId
+                    })
+                }
+            );
+
+            const orderData =
+                await orderResponse.json();
+
+            if (!orderResponse.ok || !orderData.success) {
+                throw new Error(
+                    orderData.message ||
+                    "Unable to create Razorpay order."
+                );
+            }
+
+            const options = {
+
+                key: orderData.razorpay_key_id,
+
+                amount: orderData.amount,
+
+                currency: orderData.currency,
+
+                name: "Zecpath",
+
+                description:
+                    "{{ plan.name }} Subscription",
+
+                order_id:
+                    orderData.razorpay_order_id,
+
+                handler: async function (response) {
+
+                    message.textContent =
+                        "Payment successful. Verifying payment...";
+
+                    const verifyResponse =
+                        await fetch(
+                            "/api/payments/razorpay/verify/",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " +
+                                        accessToken
+                                },
+
+                                body: JSON.stringify({
+
+                                    transaction_id:
+                                        orderData.payment_transaction_id,
+
+                                    razorpay_payment_id:
+                                        response.razorpay_payment_id,
+
+                                    razorpay_order_id:
+                                        response.razorpay_order_id,
+
+                                    razorpay_signature:
+                                        response.razorpay_signature
+                                })
+                            }
+                        );
+
+                    const verifyData =
+                        await verifyResponse.json();
+
+                    if (!verifyResponse.ok ||
+                        !verifyData.success) {
+
+                        message.textContent =
+                            verifyData.message ||
+                            "Payment verification failed.";
+
+                        payButton.disabled = false;
+
+                        return;
+                    }
+
+                    message.textContent =
+                        "Payment verified successfully. Your subscription is now active.";
+
+                    payButton.disabled = false;
+                },
+
+                modal: {
+                    ondismiss: function () {
+
+                        message.textContent =
+                            "Payment window closed.";
+
+                        payButton.disabled = false;
+                    }
+                }
+            };
+
+            const razorpay =
+                new Razorpay(options);
+
+            /*
+             * Handle Razorpay payment failures.
+             *
+             * This event is triggered when Razorpay reports
+             * that the payment attempt has failed.
+             */
+            razorpay.on(
+                "payment.failed",
+                async function (response) {
+
+                    console.error(
+                        "Razorpay payment failed:",
+                        response.error
+                    );
+
+                    message.textContent =
+                        "Payment failed. Recording the failure...";
+
+                    try {
+
+                        const failResponse =
+                            await fetch(
+                                "/api/payments/razorpay/fail/",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+
+                                        "Authorization":
+                                            "Bearer " +
+                                            accessToken
+                                    },
+
+                                    body: JSON.stringify({
+                                        transaction_id:
+                                            orderData.payment_transaction_id
+                                    })
+                                }
+                            );
+
+                        const failData =
+                            await failResponse.json();
+
+                        if (!failResponse.ok ||
+                            !failData.success) {
+
+                            message.textContent =
+                                failData.message ||
+                                "Payment failed, but the transaction could not be updated.";
+
+                            payButton.disabled = false;
+
+                            return;
+                        }
+
+                        message.textContent =
+                            "Payment failed. The transaction has been marked as failed.";
+
+                    } catch (error) {
+
+                        console.error(
+                            "Failed to record payment failure:",
+                            error
+                        );
+
+                        message.textContent =
+                            "Payment failed, but we could not update the transaction status.";
+                    }
+
+                    payButton.disabled = false;
+                }
+            );
+
+            razorpay.open();
+
+        } catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                error.message ||
+                "Something went wrong.";
+
+            payButton.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>

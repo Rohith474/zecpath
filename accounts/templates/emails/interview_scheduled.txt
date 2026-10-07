@@ -1,0 +1,27 @@
+Subject: AI Interview Scheduled - {{ job_title }}
+
+Hello {{ candidate_name }},
+
+Your AI interview has been scheduled successfully.
+
+Job Role: {{ job_title }}
+Interview Date: {{ interview_date }}
+Interview Time: {{ interview_time }}
+Interview Duration: {{ interview_duration }} minutes
+
+Interview Link:
+{{ meeting_link }}
+
+Interview Instructions:
+{{ instructions }}
+
+Please make sure that:
+- Your camera and microphone are working.
+- You have a stable internet connection.
+- You are in a quiet and well-lit environment.
+- You are ready before the scheduled interview time.
+
+Please join the interview using the link above at the scheduled time.
+
+Regards,
+Zecpath AI Recruitment System

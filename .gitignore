@@ -1,0 +1,33 @@
+# Environment variables / secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+.venv/
+venv/
+
+# Local databases / database backups
+db.sqlite3
+db_before_postgresql.sqlite3
+sqlite_data.json
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule-shm
+celerybeat-schedule-wal
+
+# Logs
+logs/
+
+# User-uploaded media
+media/
+
+# Generated documents
+accounts/utils/*.pdf
+accounts/utils/*.docx

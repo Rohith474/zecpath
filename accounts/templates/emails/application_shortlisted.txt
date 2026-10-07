@@ -1,0 +1,28 @@
+Hello {{ candidate_name }},
+
+Congratulations!
+
+We are pleased to inform you that your application for the position of {{ job_title }} has been shortlisted.
+
+Your profile has successfully progressed to the next stage of the hiring process.
+
+What happens next?
+
+The next stage may include an AI-assisted screening process. This process is designed to collect additional information related to your qualifications, skills, experience, and suitability for the position.
+
+You may receive further communication regarding the AI screening schedule and instructions.
+
+Please note:
+
+• The screening process may involve an automated AI voice call.
+• You will receive the relevant schedule and instructions before the screening process begins.
+• Please ensure that your contact details are correct and that you remain available for future communication.
+
+After the screening process is completed, your responses may be evaluated as part of the hiring workflow. Candidates who successfully progress through the screening stage may be considered for further interview stages.
+
+Please wait for further communication regarding the next step.
+
+Congratulations once again, and thank you for your interest in the position.
+
+Best regards,
+Zecpath Hiring Team

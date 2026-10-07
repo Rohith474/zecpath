@@ -1,0 +1,16 @@
+Hello {{ candidate_name }},
+
+Thank you for your interest in the position of {{ job_title }} and for taking the time to submit your application.
+
+After careful review, we regret to inform you that your application will not be progressing to the next stage of the hiring process at this time.
+
+This decision was made based on the current requirements of the position and the overall selection process.
+
+We sincerely appreciate the time and effort you invested in your application.
+
+We encourage you to explore future opportunities that may better match your skills and experience.
+
+We wish you continued success in your career.
+
+Best regards,
+Zecpath Hiring Team

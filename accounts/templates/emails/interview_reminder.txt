@@ -1,0 +1,26 @@
+Subject: AI Interview Reminder - {{ job_title }}
+
+Hello {{ candidate_name }},
+
+This is a reminder that your AI interview is scheduled soon.
+
+Job Role: {{ job_title }}
+
+Interview Date: {{ interview_date }}
+Interview Time: {{ interview_time }}
+Interview Duration: {{ interview_duration }} minutes
+
+Interview Link:
+{{ meeting_link }}
+
+Please make sure that:
+
+- Your camera and microphone are working.
+- You have a stable internet connection.
+- You are in a quiet and well-lit environment.
+- You are ready before the interview starts.
+
+Please join the interview using the link above at the scheduled time.
+
+Regards,
+Zecpath AI Recruitment System
