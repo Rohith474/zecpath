@@ -812,8 +812,19 @@ class AICall(models.Model):
         auto_now=True,
     )
 
-    def __str__(self):
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["status", "scheduled_at"],
+                name="aicall_scheduled_idx",
+            ),
+            models.Index(
+                fields=["status", "next_retry_at"],
+                name="aicall_retry_idx",
+            ),
+        ]
 
+    def __str__(self):
         return (
             f"AI Call - "
             f"{self.application.candidate.user.username} "
@@ -1227,6 +1238,13 @@ class InterviewReminder(models.Model):
     )
 
     class Meta:
+        indexes = [
+            models.Index(
+                fields=["status", "scheduled_for"],
+                name="reminder_due_idx",
+            ),
+        ]
+
         constraints = [
             models.UniqueConstraint(
                 fields=[
