@@ -27,6 +27,17 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
 
+# AWS S3 storage
+AWS_STORAGE_BUCKET_NAME = "zecpath-resumes-2026-474484"
+AWS_S3_REGION_NAME = "ap-southeast-2"
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+AWS_S3_OBJECT_PARAMETERS = {
+    "ServerSideEncryption": "AES256",
+}
+
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
@@ -43,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'accounts',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -178,8 +190,14 @@ SIMPLE_JWT = {
 }
 
 # Media Files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 # ----------------------------
 # Email Configuration
 # ----------------------------
