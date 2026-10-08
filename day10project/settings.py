@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
-
+import base64
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +37,25 @@ AWS_DEFAULT_ACL = None
 AWS_S3_OBJECT_PARAMETERS = {
     "ServerSideEncryption": "AES256",
 }
+
+# AWS CloudFront signed URLs
+AWS_CLOUDFRONT_KEY_ID = os.getenv("AWS_CLOUDFRONT_KEY_ID")
+AWS_CLOUDFRONT_PRIVATE_KEY_B64 = os.getenv(
+    "AWS_CLOUDFRONT_PRIVATE_KEY_B64"
+)
+
+if AWS_CLOUDFRONT_KEY_ID and AWS_CLOUDFRONT_PRIVATE_KEY_B64:
+    AWS_S3_CUSTOM_DOMAIN = os.getenv(
+        "AWS_S3_CUSTOM_DOMAIN",
+        "dsqsq6jj350x1.cloudfront.net",
+    )
+
+    AWS_CLOUDFRONT_KEY = base64.b64decode(
+        AWS_CLOUDFRONT_PRIVATE_KEY_B64
+    ).decode("utf-8")
+
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = 3600
 
 ALLOWED_HOSTS = [
     host.strip()
