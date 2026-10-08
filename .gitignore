@@ -31,3 +31,6 @@ media/
 # Generated documents
 accounts/utils/*.pdf
 accounts/utils/*.docx
+
+# Generated static files
+staticfiles/
