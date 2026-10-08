@@ -31,6 +31,9 @@ jobs:
             echo "Installing dependencies..."
             pip install -r requirements.txt
 
+            echo "Checking for missing migrations..."
+            python manage.py makemigrations --check --dry-run
+
             echo "Running migrations..."
             python manage.py migrate --noinput
 
