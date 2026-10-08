@@ -1,0 +1,54 @@
+name: Deploy Zecpath to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            cd /home/ubuntu/zecpath
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Activating virtual environment..."
+            source env/bin/activate
+
+            echo "Installing dependencies..."
+            pip install -r requirements.txt
+
+            echo "Running migrations..."
+            python manage.py migrate --noinput
+
+            echo "Collecting static files..."
+            python manage.py collectstatic --noinput
+
+            echo "Restarting Gunicorn..."
+            sudo systemctl restart zecpath
+
+            echo "Restarting Celery Worker..."
+            sudo systemctl restart zecpath-celery
+
+            echo "Restarting Celery Beat..."
+            sudo systemctl restart zecpath-celery-beat
+
+            echo "Checking services..."
+            sudo systemctl is-active --quiet zecpath
+            sudo systemctl is-active --quiet zecpath-celery
+            sudo systemctl is-active --quiet zecpath-celery-beat
+
+            echo "Deployment completed successfully."
