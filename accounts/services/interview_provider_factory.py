@@ -1,7 +1,7 @@
 from accounts.services.development_interview_provider import (
-    DevelopmentInterviewQuestionProvider,
     DevelopmentInterviewAnswerEvaluationProvider,
     DevelopmentInterviewMonitoringProvider,
+    DevelopmentInterviewQuestionProvider,
 )
 
 

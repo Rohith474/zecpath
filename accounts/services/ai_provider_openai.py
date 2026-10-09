@@ -1,5 +1,4 @@
 import requests
-
 from django.conf import settings
 
 from accounts.services.ai_provider import AIProvider

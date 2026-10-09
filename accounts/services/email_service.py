@@ -1,10 +1,13 @@
-from django.core.mail import send_mail
+import logging
+
 from django.conf import settings
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
 from accounts.models import EmailLog
 
+logger = logging.getLogger(__name__)
 
 def send_email_notification(
     subject,
@@ -99,6 +102,7 @@ def send_email_notification(
         }
 
     except Exception as error:
+        logger.exception("Email notification delivery failed.")
 
         # ----------------------------------------
         # Record failure

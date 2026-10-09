@@ -1,12 +1,12 @@
+import logging
 import time
 
 import requests
-
 from django.conf import settings
 
 from accounts.services.ai_provider_openai import OpenAIProvider
 
-
+logger = logging.getLogger(__name__)
 class AIBridgeService:
     """
     Central service layer between the Django application
@@ -91,6 +91,7 @@ class AIBridgeService:
                 }
 
             except Exception:
+                logger.exception("Unexpected error in AI bridge service.")
                 last_error = "An unexpected AI service error occurred."
 
             if attempt < self.MAX_RETRIES:
@@ -146,6 +147,7 @@ class AIBridgeService:
             }
 
         except Exception:
+            logger.exception("Unexpected error in AI bridge service.")
             return {
                 "success": False,
                 "message": "Unable to start AI screening.",
@@ -203,6 +205,7 @@ class AIBridgeService:
             }
 
         except Exception:
+            logger.exception("Unexpected error in AI bridge service.")
             return {
                 "success": False,
                 "message": "Unable to process AI response.",
@@ -251,6 +254,7 @@ class AIBridgeService:
             }
 
         except Exception:
+            logger.exception("Unexpected error in AI bridge service.")
             return {
                 "success": False,
                 "message": "Unable to analyze AI screening.",

@@ -1,7 +1,9 @@
+from datetime import date, datetime, time
+
 from django.core.cache import cache
 from django.db.models import Count, Q
 from django.utils import timezone
-from datetime import datetime, time, date
+
 from accounts.models import Application
 
 

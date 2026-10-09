@@ -1,8 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg
 
 from accounts.models import (
-    ATSScore,
     AIAnswerEvaluation,
+    ATSScore,
 )
 
 ATS_WEIGHT = 0.60
@@ -19,6 +20,7 @@ def get_success_classification(score):
     return "Low Potential"
 
 
+
 def get_interview_status(application):
     """
     Return a recruiter-friendly interview status based
@@ -27,7 +29,7 @@ def get_interview_status(application):
 
     try:
         ai_call = application.ai_call
-    except Exception:
+    except ObjectDoesNotExist:
         return "Not Scheduled"
 
     if ai_call.status == ai_call.SCHEDULED:

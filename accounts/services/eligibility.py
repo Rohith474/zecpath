@@ -1,11 +1,12 @@
 from decimal import Decimal
 
+from django.core.exceptions import ObjectDoesNotExist
 
 # ============================================================
 # DEFAULT THRESHOLD
 # ============================================================
 
-DEFAULT_SHORTLIST_THRESHOLD = Decimal("70")
+DEFAULT_SHORTLIST_THRESHOLD = Decimal(70)
 
 
 # ============================================================
@@ -13,9 +14,9 @@ DEFAULT_SHORTLIST_THRESHOLD = Decimal("70")
 # ============================================================
 
 JOB_TYPE_THRESHOLDS = {
-    "Internship": Decimal("55"),
-    "Part Time": Decimal("65"),
-    "Full Time": Decimal("70"),
+    "Internship": Decimal(55),
+    "Part Time": Decimal(65),
+    "Full Time": Decimal(70),
 }
 
 
@@ -74,7 +75,7 @@ def is_eligible_for_ai_call(application):
     # Candidate profile must exist
     try:
         candidate = application.candidate
-    except Exception:
+    except ObjectDoesNotExist:
         return False, "Candidate profile not found."
 
     # Candidate must not be deleted

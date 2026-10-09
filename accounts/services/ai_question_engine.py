@@ -1,3 +1,6 @@
+from django.db import transaction
+from django.utils import timezone
+
 from accounts.models import (
     AICall,
     AIInterviewAnswer,
@@ -7,8 +10,7 @@ from accounts.models import (
 from accounts.services.interview_availability import (
     InterviewAvailabilityService,
 )
-from django.utils import timezone
-from django.db import transaction
+
 
 class AIQuestionEngine:
     """
@@ -74,7 +76,7 @@ class AIQuestionEngine:
         Get or create the AI interview session.
         """
 
-        session, created = (
+        session, _created = (
             AIInterviewSession.objects.get_or_create(
                 ai_call=self.ai_call,
                 defaults={

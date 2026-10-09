@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from accounts.models import AICall
 
+
 def get_next_retry_time(config):
     """
     Calculate the next retry time while respecting

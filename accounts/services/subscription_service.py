@@ -1,19 +1,21 @@
-from django.utils import timezone
 from datetime import timedelta
-from django.db.models.functions import Coalesce
+
 from django.db.models import (
     Count,
     F,
     OuterRef,
     Q,
     Subquery,
-) 
+)
+from django.db.models.functions import Coalesce
+from django.utils import timezone
+
 from accounts.models import (
-    UserSubscription,
-    Job,
     AICall,
     Application,
     EmployerProfile,
+    Job,
+    UserSubscription,
 )
 
 

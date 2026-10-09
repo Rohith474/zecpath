@@ -2,7 +2,6 @@ from pathlib import Path
 
 from .resume_parser import extract_resume_text
 
-
 # ---------------------------------
 # Find files automatically
 # ---------------------------------

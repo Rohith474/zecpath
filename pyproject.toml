@@ -1,0 +1,26 @@
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = [
+    ".git",
+    ".ruff_cache",
+    "env",
+    ".venv",
+    "venv",
+    "media",
+    "test_media",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "RUF", "BLE", "DTZ", "SIM", "FURB", "PLR", "S"]
+
+ignore = [
+    "RUF012",
+]
+
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*.py" = ["E501"]
+"accounts/services/interview_availability.py" = ["DTZ001", "DTZ007"]
+"accounts/views.py" = ["DTZ007"]
+"accounts/utils/resume_nlp.py" = ["RUF001", "RUF002", "RUF003"]

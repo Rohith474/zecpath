@@ -1,6 +1,7 @@
+from decimal import Decimal
+
 from django.db import transaction
 from django.utils import timezone
-from decimal import Decimal
 
 from accounts.models import (
     InterviewSchedule,
@@ -11,6 +12,7 @@ from accounts.models import (
 from accounts.services.interview_provider_factory import (
     InterviewProviderFactory,
 )
+
 
 class ScheduledInterviewService:
     """
@@ -92,7 +94,7 @@ class ScheduledInterviewService:
         # Get or create interview session
         # ----------------------------------------
 
-        session, created = (
+        session, _created = (
             ScheduledInterviewSession.objects
             .select_for_update()
             .get_or_create(
@@ -438,6 +440,7 @@ class ScheduledInterviewService:
         for question, answer in zip(
             questions,
             answers,
+            strict=True,
         ):
 
             evaluation = (

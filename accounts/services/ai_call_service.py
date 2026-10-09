@@ -5,7 +5,6 @@ from django.utils import timezone
 from accounts.models import (
     AICall,
     AIInterviewConfig,
-    Application,
 )
 from accounts.services.eligibility import (
     is_eligible_for_ai_call,
@@ -13,6 +12,7 @@ from accounts.services.eligibility import (
 from accounts.services.subscription_service import (
     SubscriptionService,
 )
+
 
 def get_next_valid_call_time(config):
     """

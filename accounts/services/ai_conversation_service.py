@@ -4,8 +4,8 @@ from accounts.models import (
     AICall,
     AIInterviewAnswer,
     AIInterviewSession,
-    CallLog,
     AuditLog,
+    CallLog,
 )
 
 

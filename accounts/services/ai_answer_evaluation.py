@@ -1,4 +1,4 @@
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from accounts.models import AIAnswerEvaluation
 
@@ -121,9 +121,9 @@ class AIAnswerEvaluationService:
         score = (
             Decimal(len(matched_keywords))
             / Decimal(len(keywords))
-        ) * Decimal("100")
+        ) * Decimal(100)
 
-        return self._round_score(min(Decimal("100"), score))
+        return self._round_score(min(Decimal(100), score))
 
     def calculate_completeness(self):
         answer = self.answer.answer_text.strip()
@@ -164,10 +164,10 @@ class AIAnswerEvaluationService:
         score = (
             Decimal(len(matched_keywords))
             / Decimal(len(keywords))
-        ) * Decimal("100")
+        ) * Decimal(100)
 
         return (
-            self._round_score(min(Decimal("100"), score)),
+            self._round_score(min(Decimal(100), score)),
             matched_keywords,
         )
 
@@ -184,7 +184,7 @@ class AIAnswerEvaluationService:
         )
 
         return self._round_score(
-            min(Decimal("100"), score)
+            min(Decimal(100), score)
         )
 
     def evaluate(self):
@@ -205,7 +205,7 @@ class AIAnswerEvaluationService:
                 relevance_score
                 + completeness_score
                 + keyword_score
-            ) / Decimal("3")
+            ) / Decimal(3)
         )
 
         annotations = {
@@ -218,7 +218,7 @@ class AIAnswerEvaluationService:
             },
         }
 
-        evaluation, created = AIAnswerEvaluation.objects.update_or_create(
+        evaluation, _created = AIAnswerEvaluation.objects.update_or_create(
             answer=self.answer,
             defaults={
                 "relevance_score": relevance_score,

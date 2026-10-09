@@ -1,14 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from rest_framework.test import APIClient
 
 from accounts.models import (
-    CustomUser,
+    Application,
     CandidateProfile,
+    CustomUser,
     EmployerProfile,
     Job,
-    Application,
     Notification,
     SavedJob,
 )

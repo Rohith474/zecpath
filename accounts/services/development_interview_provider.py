@@ -1,9 +1,9 @@
 from decimal import Decimal
 
 from .interview_providers import (
-    InterviewQuestionProvider,
     InterviewAnswerEvaluationProvider,
     InterviewMonitoringProvider,
+    InterviewQuestionProvider,
 )
 
 
@@ -34,10 +34,10 @@ class DevelopmentInterviewQuestionProvider(
                 f"{job.skills}."
             ),
             (
-                f"Describe a project or situation where you "
-                f"demonstrated skills relevant to this job. "
-                f"How did your experience help you solve the "
-                f"problem?"
+                "Describe a project or situation where you "
+                "demonstrated skills relevant to this job. "
+                "How did your experience help you solve the "
+                "problem?"
             ),
         ]
 

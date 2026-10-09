@@ -1,16 +1,17 @@
 import os
 
 from rest_framework import serializers
+
 from .models import (
-    CustomUser,
-    CandidateProfile,
-    EmployerProfile,
-    Job,
-    Application,
-    SavedJob,
-    ApplicationResumeParse,
     AIInterviewConfig,
+    Application,
+    ApplicationResumeParse,
+    CandidateProfile,
+    CustomUser,
+    EmployerProfile,
     InterviewSchedule,
+    Job,
+    SavedJob,
 )
 
 

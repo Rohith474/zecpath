@@ -1,11 +1,11 @@
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.db import transaction
 
 from accounts.models import (
-    AICandidateReport,
-    AICall,
     AIAnswerEvaluation,
+    AICall,
+    AICandidateReport,
     ATSScore,
 )
 
@@ -44,22 +44,22 @@ class AICandidateReportService:
     def _generate_strengths(ats_score, ai_call_score, evaluations):
         strengths = []
 
-        if ats_score.skill_score >= Decimal("70"):
+        if ats_score.skill_score >= Decimal(70):
             strengths.append(
                 "Strong alignment with the required job skills."
             )
 
-        if ats_score.experience_score >= Decimal("70"):
+        if ats_score.experience_score >= Decimal(70):
             strengths.append(
                 "Relevant experience alignment with the job requirements."
             )
 
-        if ats_score.education_score >= Decimal("70"):
+        if ats_score.education_score >= Decimal(70):
             strengths.append(
                 "Education background meets the expected criteria."
             )
 
-        if ai_call_score >= Decimal("70"):
+        if ai_call_score >= Decimal(70):
             strengths.append(
                 "Strong performance across AI interview responses."
             )
@@ -85,22 +85,22 @@ class AICandidateReportService:
     def _generate_risks(ats_score, ai_call_score, evaluations):
         risks = []
 
-        if ats_score.skill_score < Decimal("50"):
+        if ats_score.skill_score < Decimal(50):
             risks.append(
                 "Low alignment with the required job skills."
             )
 
-        if ats_score.experience_score < Decimal("50"):
+        if ats_score.experience_score < Decimal(50):
             risks.append(
                 "Limited alignment with the required experience."
             )
 
-        if ats_score.education_score < Decimal("50"):
+        if ats_score.education_score < Decimal(50):
             risks.append(
                 "Education score is below the reporting threshold."
             )
 
-        if ai_call_score < Decimal("50"):
+        if ai_call_score < Decimal(50):
             risks.append(
                 "AI interview performance requires recruiter review."
             )

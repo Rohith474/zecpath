@@ -1,13 +1,9 @@
 from decimal import Decimal
 
 from accounts.models import (
-    Job,
-    CandidateProfile,
-    Application,
     ApplicationResumeParse,
     ATSScore,
 )
-
 
 # ============================================================
 # ATS WEIGHTS
@@ -60,7 +56,7 @@ def calculate_skill_score(job, parsed_data):
     }
 
     if not job_skills:
-        return Decimal("0")
+        return Decimal(0)
 
     matched_skills = get_matched_skills(
         job,
@@ -70,11 +66,11 @@ def calculate_skill_score(job, parsed_data):
     score = (
         Decimal(len(matched_skills))
         / Decimal(len(job_skills))
-    ) * Decimal("100")
+    ) * Decimal(100)
 
     return min(
         score,
-        Decimal("100")
+        Decimal(100)
     )
 
 # ============================================================
@@ -94,19 +90,19 @@ def calculate_experience_score(job, candidate):
     )
 
     if required_experience <= 0:
-        return Decimal("100")
+        return Decimal(100)
 
     if candidate_experience >= required_experience:
-        return Decimal("100")
+        return Decimal(100)
 
     score = (
         Decimal(candidate_experience)
         / Decimal(required_experience)
-    ) * Decimal("100")
+    ) * Decimal(100)
 
     return min(
         score,
-        Decimal("100")
+        Decimal(100)
     )
 
 # ============================================================
@@ -132,7 +128,7 @@ def calculate_education_score(
     )
 
     if not education:
-        return Decimal("0")
+        return Decimal(0)
 
     job_text = (
         f"{job.title} {job.description}"
@@ -166,7 +162,7 @@ def calculate_education_score(
     # If the job does not mention an education
     # requirement, don't penalize the candidate.
     if not education_required:
-        return Decimal("100")
+        return Decimal(100)
 
     candidate_education_text = " ".join(
         [
@@ -176,16 +172,16 @@ def calculate_education_score(
     ).lower()
 
     if not candidate_education_text:
-        return Decimal("0")
+        return Decimal(0)
 
     for keyword in education_keywords:
 
         if keyword in job_text:
 
             if keyword in candidate_education_text:
-                return Decimal("100")
+                return Decimal(100)
 
-    return Decimal("50")
+    return Decimal(50)
 
 # ============================================================
 # FINAL ATS SCORE
@@ -211,11 +207,11 @@ def calculate_ats_score(
     except ApplicationResumeParse.DoesNotExist:
 
         return {
-            "skill_score": Decimal("0"),
+            "skill_score": Decimal(0),
             "matched_skill_count": 0,
-            "experience_score": Decimal("0"),
-            "education_score": Decimal("0"),
-            "match_percentage": Decimal("0"),
+            "experience_score": Decimal(0),
+            "education_score": Decimal(0),
+            "match_percentage": Decimal(0),
         }
 
     parsed_data = (
@@ -267,7 +263,7 @@ def calculate_ats_score(
 
     match_percentage = min(
         match_percentage,
-        Decimal("100"),
+        Decimal(100),
     )
 
     return {
@@ -309,7 +305,7 @@ def calculate_and_save_ats_score(
         application,
     )
 
-    ats_score, created = ATSScore.objects.update_or_create(
+    ats_score, _created = ATSScore.objects.update_or_create(
         candidate=application.candidate,
         job=job,
         defaults=scores,

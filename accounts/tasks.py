@@ -1,26 +1,31 @@
+import logging
+
 from celery import shared_task
 from django.utils import timezone
+
 from accounts.models import (
     Application,
     CandidateProfile,
     EmailLog,
     ResumeParse,
 )
-from accounts.services.logging_service import LoggingService
-from accounts.utils.resume_parser import extract_resume_text
-from accounts.utils.resume_nlp import parse_resume_data
-from accounts.services.email_service import (
-    send_email_notification,
+from accounts.services.ai_call_scheduler import (
+    process_scheduled_ai_calls,
 )
 from accounts.services.ai_call_service import (
     trigger_ai_call_for_application,
 )
-from accounts.services.ai_call_scheduler import (
-    process_scheduled_ai_calls,
+from accounts.services.email_service import (
+    send_email_notification,
 )
 from accounts.services.interview_reminder import (
     InterviewReminderService,
 )
+from accounts.services.logging_service import LoggingService
+from accounts.utils.resume_nlp import parse_resume_data
+from accounts.utils.resume_parser import extract_resume_text
+
+logger = logging.getLogger(__name__)
 @shared_task(
     bind=True,
     max_retries=2,
@@ -106,7 +111,9 @@ def send_email_task(
             )
 
         except Exception:
-            pass
+            logger.exception(
+                "Failed to update interview reminder after email delivery."
+            )
 
         return result
 
@@ -277,6 +284,7 @@ def resume_parsing_task(candidate_id):
         )
 
     except Exception as e:
+        logger.exception("Resume parsing task failed.")
 
         return {
             "success": False,
@@ -353,6 +361,7 @@ def trigger_ai_call_task(application_id):
         return result
 
     except Exception as e:
+        logger.exception("Failed to trigger AI call task.")
 
         return {
             "success": False,
@@ -375,6 +384,7 @@ def process_scheduled_ai_calls_task():
         }
 
     except Exception as e:
+        logger.exception("Failed to process scheduled AI calls task.")
         return {
             "success": False,
             "message": "Failed to process scheduled AI calls.",
@@ -396,6 +406,7 @@ def process_interview_reminders_task():
         }
 
     except Exception as e:
+        logger.exception("Failed to process interview reminders task.")
         return {
             "success": False,
             "message": "Failed to process interview reminders.",

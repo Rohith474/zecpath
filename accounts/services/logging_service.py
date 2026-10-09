@@ -2,7 +2,6 @@ import logging
 
 from accounts.models import AuditLog
 
-
 application_logger = logging.getLogger("accounts")
 ai_logger = logging.getLogger("ai")
 security_logger = logging.getLogger("security")
@@ -90,7 +89,7 @@ class LoggingService:
         if exception:
             error_message += (
                 f" | exception={type(exception).__name__}"
-                f" | error={str(exception)}"
+                f" | error={exception!s}"
             )
 
         application_logger.error(

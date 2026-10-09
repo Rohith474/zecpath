@@ -1,14 +1,13 @@
 from accounts.models import (
     Application,
-    Notification,
     EmailLog,
+    Notification,
 )
-
-from accounts.tasks import send_email_task
 from accounts.tasks import (
     send_email_task,
     trigger_ai_call_task,
 )
+
 from .eligibility import is_eligible_for_shortlisting
 
 

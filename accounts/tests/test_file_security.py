@@ -1,15 +1,13 @@
-from django.test import TestCase
-from django.urls import reverse
-from django.test import override_settings
 from django.core.files.uploadedfile import (
     SimpleUploadedFile,
 )
-
+from django.test import TestCase, override_settings
+from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.models import (
-    CustomUser,
     CandidateProfile,
+    CustomUser,
 )
 
 

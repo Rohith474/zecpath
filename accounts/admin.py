@@ -2,21 +2,21 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .models import (
-    CustomUser,
-    CandidateProfile,
-    EmployerProfile,
-    Job,
-    Application,
-    ResumeParse,
-    AIInterviewConfig,
     AICall,
-    InterviewSchedule,
     AIInterviewAnswer,
-    AIScreeningReport,
+    AIInterviewConfig,
     AIInterviewSession,
-    CallLog,
-    AIQuestionTemplate,
     AIQuestionJobMapping,
+    AIQuestionTemplate,
+    AIScreeningReport,
+    Application,
+    CallLog,
+    CandidateProfile,
+    CustomUser,
+    EmployerProfile,
+    InterviewSchedule,
+    Job,
+    ResumeParse,
 )
 
 
@@ -46,7 +46,8 @@ class CustomUserAdmin(UserAdmin):
         "email",
     )
 
-    fieldsets = UserAdmin.fieldsets + (
+    fieldsets = (
+        *UserAdmin.fieldsets,
         (
             "Additional Information",
             {
@@ -59,7 +60,8 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 
-    add_fieldsets = UserAdmin.add_fieldsets + (
+    add_fieldsets = (
+        *UserAdmin.add_fieldsets,
         (
             "Additional Information",
             {
@@ -70,6 +72,7 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
 
 
 @admin.register(CandidateProfile)

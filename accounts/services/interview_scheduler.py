@@ -4,15 +4,15 @@ from django.utils import timezone
 
 from accounts.models import (
     CandidateInterviewAvailability,
-    InterviewSchedule,
-    InterviewReminder,
     EmailLog,
+    InterviewSchedule,
     Notification,
 )
-from accounts.tasks import send_email_task
 from accounts.services.interview_reminder import (
     InterviewReminderService,
 )
+from accounts.tasks import send_email_task
+
 
 class InterviewSchedulingService:
     """

@@ -4,11 +4,10 @@ from django.db import models
 from django.utils import timezone
 
 from accounts.models import (
-    InterviewSchedule,
-    InterviewReminder,
     EmailLog,
+    InterviewReminder,
+    InterviewSchedule,
 )
-
 
 
 class InterviewReminderService:
