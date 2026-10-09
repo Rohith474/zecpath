@@ -71,6 +71,7 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'rest_framework',
+    'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'accounts',
@@ -174,6 +175,8 @@ from datetime import timedelta
 
 REST_FRAMEWORK = {
 
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -204,7 +207,25 @@ REST_FRAMEWORK = {
         "premium": "20/minute",
     },
 }
-
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Zecpath API",
+    "DESCRIPTION": (
+        "API documentation for the Zecpath recruitment platform. "
+        "Authentication uses JWT access and refresh tokens."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENTS": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            },
+        },
+    },
+    
+}
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),

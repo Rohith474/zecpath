@@ -75,3 +75,4 @@ zope.event==6.2
 zope.interface==8.6
 boto3==1.43.109
 django-storages==1.14.6
+drf-spectacular==0.30.0

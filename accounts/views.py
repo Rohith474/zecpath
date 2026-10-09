@@ -3,6 +3,8 @@ from rest_framework import (
     serializers,
     status,
 )
+from drf_spectacular.openapi import AutoSchema
+from drf_spectacular.utils import extend_schema
 import hashlib
 import json
 import razorpay
@@ -2414,11 +2416,19 @@ class MySavedJobsView(generics.ListAPIView):
             )
             .order_by("-saved_at")
         )
+
+class UnpaginatedListSchema(AutoSchema):
+    """Documentation only: this view returns a plain JSON array, not a paginated object."""
+
+    def _get_paginator(self):
+        return None
+    
 # ----------------------------
 # Job Recommendation API
 # ----------------------------
 class RecommendedJobsView(generics.ListAPIView):
 
+    schema = UnpaginatedListSchema()
     serializer_class = JobSerializer
 
     permission_classes = [
@@ -2473,7 +2483,16 @@ class RecommendedJobsView(generics.ListAPIView):
             .distinct()
             .order_by("-created_at")
         )
-
+    @extend_schema(
+        summary="List recommended jobs for the logged-in candidate",
+        description=(
+            "Returns a plain JSON array (not paginated) of active jobs matched to the "
+            "candidate's profile, excluding jobs already applied to. Returns [] when "
+            "nothing matches. Results are cached for 5 minutes."
+        ),
+        parameters=[],
+        responses=JobSerializer(many=True),
+    )
     def list(self, request, *args, **kwargs):
 
         from django.core.cache import cache
