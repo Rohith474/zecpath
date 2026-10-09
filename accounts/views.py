@@ -178,9 +178,12 @@ class CandidateView(APIView):
 # ----------------------------
 
 class CandidateProfileMixin:
-
     def get_object(self):
-        return CandidateProfile.objects.get(user=self.request.user)
+        return get_object_or_404(
+            CandidateProfile,
+            user=self.request.user,
+            is_deleted=False,
+        )
 
 
 class EmployerProfileMixin:
@@ -301,6 +304,7 @@ class CandidateListView(generics.ListAPIView):
 
     permission_classes = [
         IsAuthenticated,
+        IsEmployer | IsAdmin,
     ]
 
     queryset = (
@@ -612,14 +616,12 @@ class ApplyJobView(generics.CreateAPIView):
                 cleaned_text
             )
 
-        except Exception as e:
-
+        except Exception:
             raise serializers.ValidationError(
                 {
                     "detail":
-                    "Unable to parse the submitted resume.",
-                    "error":
-                    str(e),
+                    "Unable to parse the submitted resume. "
+                    "Please check your file and try again."
                 }
             )
 

@@ -362,75 +362,35 @@ class CandidateProfileSecurityTests(TestCase):
     # sensitive candidate fields
     # ====================================
 
-    def test_candidate_list_hides_sensitive_fields(
-        self
-    ):
+    def test_candidate_list_hides_sensitive_fields(self):
+
+        employer_user = CustomUser.objects.create_user(
+            username="employer_security_test",
+            email="employer_security_test@test.com",
+            password="TestPassword123!",
+            role=CustomUser.EMPLOYER,
+        )
 
         self.client.force_authenticate(
-            user=self.other_user
+            user=employer_user
         )
 
         url = reverse("candidate-list")
-
         response = self.client.get(url)
 
-        self.assertEqual(
-            response.status_code,
-            200,
-        )
+        self.assertEqual(response.status_code, 200)
 
         candidate = response.data["results"][0]
 
-        # --------------------------------
         # Public fields must be visible
-        # --------------------------------
+        self.assertIn("id", candidate)
+        self.assertIn("username", candidate)
+        self.assertIn("skills", candidate)
+        self.assertIn("education", candidate)
+        self.assertIn("experience", candidate)
 
-        self.assertIn(
-            "id",
-            candidate,
-        )
-
-        self.assertIn(
-            "username",
-            candidate,
-        )
-
-        self.assertIn(
-            "skills",
-            candidate,
-        )
-
-        self.assertIn(
-            "education",
-            candidate,
-        )
-
-        self.assertIn(
-            "experience",
-            candidate,
-        )
-
-        # --------------------------------
-        # Sensitive/internal fields
-        # must be hidden
-        # --------------------------------
-
-        self.assertNotIn(
-            "user",
-            candidate,
-        )
-
-        self.assertNotIn(
-            "expected_salary",
-            candidate,
-        )
-
-        self.assertNotIn(
-            "resume",
-            candidate,
-        )
-
-        self.assertNotIn(
-            "is_deleted",
-            candidate,
-        )
+        # Sensitive fields must not be exposed
+        self.assertNotIn("user", candidate)
+        self.assertNotIn("expected_salary", candidate)
+        self.assertNotIn("resume", candidate)
+        self.assertNotIn("is_deleted", candidate)

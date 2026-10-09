@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-
+from django.test import override_settings
 from django.core.files.uploadedfile import (
     SimpleUploadedFile,
 )
@@ -13,6 +13,19 @@ from accounts.models import (
 )
 
 
+@override_settings(
+    STORAGES={
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            "OPTIONS": {
+                "location": "test_media",
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+)
 class ResumeFileSecurityTests(TestCase):
 
     def setUp(self):

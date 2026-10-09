@@ -141,6 +141,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "user",
             "is_verified",
+            "is_deleted",
         ]
 
     def validate_company_name(self, value):

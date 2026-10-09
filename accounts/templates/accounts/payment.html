@@ -76,8 +76,19 @@
 
 </div>
 
+<!-- Safely serialize Django template values for JavaScript. -->
+{{ plan.id|json_script:"plan-id-data" }}
+{{ plan.name|json_script:"plan-name-data" }}
+
 <script>
-    const planId = "{{ plan.id }}";
+    const planId = JSON.parse(
+        document.getElementById("plan-id-data").textContent
+    );
+
+    const planName = JSON.parse(
+        document.getElementById("plan-name-data").textContent
+    );
+
     const payButton = document.getElementById("pay-button");
     const message = document.getElementById("message");
 
@@ -135,8 +146,7 @@
 
                 name: "Zecpath",
 
-                description:
-                    "{{ plan.name }} Subscription",
+                description: `${planName} Subscription`,
 
                 order_id:
                     orderData.razorpay_order_id,
