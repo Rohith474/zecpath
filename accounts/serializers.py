@@ -13,11 +13,18 @@ from .models import (
     Job,
     SavedJob,
 )
-
-
 class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    role = serializers.ChoiceField(
+        choices=[
+            (CustomUser.CANDIDATE, "Candidate"),
+            (CustomUser.EMPLOYER, "Employer"),
+        ],
+        required=True,
+    )
 
     class Meta:
         model = CustomUser
@@ -25,11 +32,22 @@ class RegisterSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "password",
+            "password2",
             "role",
             "phone_number",
         ]
 
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError({
+                "password2": "Passwords do not match."
+            })
+
+        return attrs
+
     def create(self, validated_data):
+        validated_data.pop("password2")
+
         user = CustomUser.objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
@@ -37,6 +55,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=validated_data["role"],
             phone_number=validated_data.get("phone_number"),
         )
+
         return user
 
 class CandidateProfileSerializer(serializers.ModelSerializer):
